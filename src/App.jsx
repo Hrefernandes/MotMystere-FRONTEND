@@ -1,11 +1,15 @@
+import Accueil from './pages/Accueil'
+import Partie from './pages/Partie'
+import { Route, Routes } from 'react-router-dom'
 import './App.css'
 
 function App() {
 
   return (
-    <>
-      <h1>Projet Mot Mystère</h1>
-    </>
+    <Routes>
+      <Route path="/" element={<Accueil />} />
+      <Route path="/partie" element={<Partie />} />
+    </Routes>
   )
 }
 
