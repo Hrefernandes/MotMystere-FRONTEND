@@ -1,20 +1,23 @@
 import './Grille.css'
 
-function Grille() {
-  const lignes = Array.from({ length: 6 })
-  const cases = Array.from({ length: 5 })
-
+function Grille({ board, evaluations }) {
   return (
     <section className="grille" aria-label="Grille de jeu">
-      {lignes.map((_, ligneIndex) => (
+      {board.map((ligne, ligneIndex) => (
         <div className="grille-ligne" key={ligneIndex}>
-          {cases.map((_, caseIndex) => (
-            <div
-              className="grille-case"
-              key={`${ligneIndex}-${caseIndex}`}
-              aria-label={`Ligne ${ligneIndex + 1}, case ${caseIndex + 1}`}
-            />
-          ))}
+          {ligne.map((lettre, caseIndex) => {
+            const evaluation = evaluations[ligneIndex]?.[caseIndex] ?? ''
+
+            return (
+              <div
+                className={`grille-case grille-case--${evaluation}`}
+                key={`${ligneIndex}-${caseIndex}`}
+                aria-label={`Ligne ${ligneIndex + 1}, case ${caseIndex + 1}`}
+              >
+                {lettre.toUpperCase()}
+              </div>
+            )
+          })}
         </div>
       ))}
     </section>
