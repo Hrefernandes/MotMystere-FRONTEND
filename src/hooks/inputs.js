@@ -21,9 +21,10 @@ export function useInputs() {
   const [evaluations, setEvaluations] = useState(
     Array.from({ length: NUMBER_OF_ROWS }, () => null),
   )
+  const [status, setStatus] = useState('playing')
 
   const handleKeyDown = useCallback((event) => {
-    if (currentRow >= NUMBER_OF_ROWS) {
+    if (status !== 'playing' || currentRow >= NUMBER_OF_ROWS) {
       return
     }
 
@@ -79,10 +80,20 @@ export function useInputs() {
         return newEvaluations
       })
 
+      if (guess === solution) {
+        setStatus('won')
+        return
+      }
+
+      if (currentRow === NUMBER_OF_ROWS - 1) {
+        setStatus('lost')
+        return
+      }
+
       setCurrentRow((row) => row + 1)
       setCurrentColumn(0)
     }
-  }, [board, currentColumn, currentRow, solution])
+  }, [board, currentColumn, currentRow, solution, status])
 
   useEffect(() => {
     window.addEventListener('keydown', handleKeyDown)
@@ -98,5 +109,8 @@ export function useInputs() {
     evaluations,
     solution,
     currentRow,
+    status,
+    essais: guesses.length,
+    points: status === 'won' ? NUMBER_OF_ROWS - currentRow : 0,
   }
 }

@@ -19,14 +19,14 @@ function Accueil() {
     navigate('/partie')
   }
 
-  
+
   return (
     <>
       <h1>Mistery Word</h1>
       <p>Trouve le bon mot, 5 lettres 6 essais</p>
 
       <form onSubmit={partieStart}>
-        {erreurs && <p role="alert">{erreurs}</p>} 
+        {erreurs && <p role="alert">{erreurs}</p>}
         <label>Ton pseudo</label>
         <input id="pseudo" type="text" value={pseudo} onChange={(e) => setPseudo(e.target.value)} />
         <p>Pseudo : {pseudo}</p>
