@@ -1,7 +1,7 @@
 import Accueil from './pages/Accueil'
 import Partie from './pages/Partie'
 import { Route, Routes } from 'react-router-dom'
-import './App.css'
+import './style/App.css'
 
 function App() {
 

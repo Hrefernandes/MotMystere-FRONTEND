@@ -1,0 +1,17 @@
+:root {
+  --fond: #0d0221;
+  --texte: #f5f0ff;
+  --vert: #00d46a;      /* lettre bien placée */
+  --jaune: #ffd600;     /* lettre mal placée */
+  --gris: #4a3f6b;      /* lettre absente */
+  --accent: #ff2e97;    /* boutons */
+  --blanc: #ffffff;
+  --noir: #111111;  
+}
+
+body {
+  margin: 0;
+  background: var(--fond);
+  color: var(--texte);
+  font-family: 'Rubik', sans-serif;
+}
