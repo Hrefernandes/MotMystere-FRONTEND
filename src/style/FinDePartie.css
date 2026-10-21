@@ -1,0 +1,75 @@
+.finFond {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: rgba(13, 2, 33, 0.85);
+  z-index: 10;
+  animation: fond-apparait 0.3s ease-out;
+}
+
+.finPartie {
+  display: flex;
+  flex-direction: column;
+  width: min(90%, 420px);
+  align-items: center;
+  gap: 14px;
+  padding: 28px 24px;
+  text-align: center;
+  background: var(--fond);
+  border: 2px solid var(--accent);
+  border-radius: 12px;
+  box-shadow: 0 0 24px var(--accent);
+  animation: carte-apparait 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) 0.1s backwards;
+}
+
+.fin-titre {
+  margin: 0;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 36px;
+}
+
+.fin-mot {
+  color: var(--jaune);
+  letter-spacing: 0.2em;
+}
+
+.fin-points {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--vert);
+}
+
+.fin-boutons {
+  display: flex;
+  gap: 12px;
+}
+
+.fin-bouton {
+  padding: 12px 22px;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--noir);
+  background: var(--accent);
+  border: 2px solid var(--accent);
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.fin-bouton.secondaire {
+  color: var(--texte);
+  background: transparent;
+}
+
+@keyframes fond-apparait {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes carte-apparait {
+  from { opacity: 0; transform: translateY(30px) scale(0.9); }
+  to   { opacity: 1; transform: none; }
+}
+
