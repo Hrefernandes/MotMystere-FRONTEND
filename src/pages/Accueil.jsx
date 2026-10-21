@@ -25,7 +25,7 @@ function Accueil() {
     }
     setErreurs('')
     localStorage.setItem('pseudo', pseudo.trim())
-    navigate('/test')
+    navigate('/partie')
   }
 
   useEffect(() => {
