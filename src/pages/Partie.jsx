@@ -12,6 +12,8 @@ function Partie() {
     status,
     essais,
     points,
+    isCheckingWord,
+    inputError,
   } = useInputs()
 
   function continueToEndScreen() {
@@ -31,9 +33,23 @@ function Partie() {
 
       <Grille board={board} evaluations={evaluations} />
 
-      {status === 'playing' ? (
-        <p>Ligne actuelle : {currentRow + 1}</p>
-      ) : (
+      {status === 'playing' && (
+        <>
+          {isCheckingWord && (
+            <p aria-live="polite">
+              Vérification du mot...
+            </p>
+          )}
+
+          {inputError && (
+            <p role="alert">
+              {inputError}
+            </p>
+          )}
+        </>
+      )}
+
+      {status !== 'playing' && (
         <section aria-live="polite">
           {status === 'won' ? (
             <p>Bravo, tu as trouvé le mot !</p>

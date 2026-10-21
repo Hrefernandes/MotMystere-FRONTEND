@@ -12,6 +12,70 @@ function createEmptyBoard() {
   )
 }
 
+async function isFrenchWord(word) {
+  const normalizedWord = normalizeWord(word)
+
+  const searchParams = new URLSearchParams({
+    action: 'query',
+    list: 'search',
+    srsearch: word,
+    format: 'json',
+    origin: '*',
+  })
+
+  const searchResponse = await fetch(
+    `https://fr.wiktionary.org/w/api.php?${searchParams.toString()}`,
+  )
+
+  if (!searchResponse.ok) {
+    throw new Error('Impossible de contacter le Wiktionnaire')
+  }
+
+  const searchData = await searchResponse.json()
+  const searchResults = searchData.query?.search ?? []
+
+  const matchingTitles = searchResults
+    .map((result) => result.title)
+    .filter((title) => normalizeWord(title) === normalizedWord)
+
+  if (matchingTitles.length === 0) {
+    return false
+  }
+
+  const categoryParams = new URLSearchParams({
+    action: 'query',
+    titles: matchingTitles.join('|'),
+    prop: 'categories',
+    cllimit: 'max',
+    format: 'json',
+    origin: '*',
+  })
+
+  const categoryResponse = await fetch(
+    `https://fr.wiktionary.org/w/api.php?${categoryParams.toString()}`,
+  )
+
+  if (!categoryResponse.ok) {
+    throw new Error('Impossible de récupérer les catégories Wiktionary')
+  }
+
+  const categoryData = await categoryResponse.json()
+  const pages = Object.values(categoryData.query?.pages ?? {})
+
+  return pages.some((page) =>
+    page.categories?.some((category) =>
+      normalizeWord(category.title).includes('en francais'),
+    ),
+  )
+}
+
+function normalizeWord(word) {
+  return word
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+}
+
 export function useInputs() {
   const [solution] = useState(() => getRandomWord())
   const [board, setBoard] = useState(createEmptyBoard)
@@ -22,8 +86,10 @@ export function useInputs() {
     Array.from({ length: NUMBER_OF_ROWS }, () => null),
   )
   const [status, setStatus] = useState('playing')
+  const [isCheckingWord, setIsCheckingWord] = useState(false)
+  const [inputError, setInputError] = useState('')
 
-  const handleKeyDown = useCallback((event) => {
+  const handleKeyDown = useCallback(async (event) => {
     if (status !== 'playing' || currentRow >= NUMBER_OF_ROWS) {
       return
     }
@@ -32,6 +98,8 @@ export function useInputs() {
       if (currentColumn >= WORD_LENGTH) {
         return
       }
+
+      setInputError('')
 
       const letter = event.key.toLowerCase()
 
@@ -65,35 +133,63 @@ export function useInputs() {
     if (event.key === 'Enter') {
       event.preventDefault()
 
-      if (currentColumn !== WORD_LENGTH) {
+      if (currentColumn !== WORD_LENGTH || isCheckingWord) {
         return
       }
 
       const guess = board[currentRow].join('')
-      const evaluation = evaluateGuess(guess, solution)
 
-      setGuesses((currentGuesses) => [...currentGuesses, guess])
+      setIsCheckingWord(true)
+      setInputError('')
 
-      setEvaluations((currentEvaluations) => {
-        const newEvaluations = [...currentEvaluations]
-        newEvaluations[currentRow] = evaluation
-        return newEvaluations
-      })
+      try {
+        const wordExists = await isFrenchWord(guess)
 
-      if (guess === solution) {
-        setStatus('won')
-        return
+        if (!wordExists) {
+          setInputError(
+            'Ce n\'est pas un mot français.',
+          )
+          return
+        }
+
+        const evaluation = evaluateGuess(guess, solution)
+
+        setGuesses((currentGuesses) => [...currentGuesses, guess])
+
+        setEvaluations((currentEvaluations) => {
+          const newEvaluations = [...currentEvaluations]
+          newEvaluations[currentRow] = evaluation
+          return newEvaluations
+        })
+
+        if (guess === solution) {
+          setStatus('won')
+          return
+        }
+
+        if (currentRow === NUMBER_OF_ROWS - 1) {
+          setStatus('lost')
+          return
+        }
+
+        setCurrentRow((row) => row + 1)
+        setCurrentColumn(0)
+      } catch (error) {
+        setInputError(
+          'La vérification du mot est impossible pour le moment. Réessaie.',
+        )
+      } finally {
+        setIsCheckingWord(false)
       }
-
-      if (currentRow === NUMBER_OF_ROWS - 1) {
-        setStatus('lost')
-        return
-      }
-
-      setCurrentRow((row) => row + 1)
-      setCurrentColumn(0)
     }
-  }, [board, currentColumn, currentRow, solution, status])
+  }, [
+    board,
+    currentColumn,
+    currentRow,
+    isCheckingWord,
+    solution,
+    status,
+  ])
 
   useEffect(() => {
     window.addEventListener('keydown', handleKeyDown)
@@ -110,7 +206,9 @@ export function useInputs() {
     solution,
     currentRow,
     status,
+    isCheckingWord,
+    inputError,
     essais: guesses.length,
-    points: status === 'won' ? NUMBER_OF_ROWS - currentRow : 0,
+    points: status === 'won' ? (NUMBER_OF_ROWS - currentRow) * 100 : 0,
   }
 }
