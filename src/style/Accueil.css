@@ -114,3 +114,12 @@
   filter: brightness(1.15);
   transform: scale(1.03);
 }
+
+.bouton.secondaire {
+  padding: 8px 14px;
+  font-size: 14px;
+  color: var(--texte);
+  background: transparent;
+  border: 2px solid var(--accent);
+  box-shadow: none;
+}

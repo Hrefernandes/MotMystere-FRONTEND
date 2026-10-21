@@ -22,7 +22,7 @@
   font-size: 18px;
 }
 
-.exemples {
+.exemplesBloc {
   list-style: none;
   margin: 0;
   padding: 0;
@@ -31,13 +31,13 @@
   gap: 16px;
 }
 
-.exemples li {
+.exemplesBloc li {
   display: flex;
   align-items: center;
   gap: 20px;
 }
 
-.exemples p {
+.exemplesBloc p {
   margin: 0;
   font-size: 18px;
 }
@@ -52,7 +52,7 @@
   border-radius: 10px;
 }
 
-.exemples .tuile {
+.exemplesBloc .tuile {
   width: 80px;
   height: 80px;
   font-size: 40px;

@@ -41,7 +41,7 @@ function Regles() {
         <li>Après chaque essai, les lettres changent de couleur :</li>
       </ol>
 
-      <ul className="exemples" ref={exemplesRef}>
+      <ul className="exemplesBloc" ref={exemplesRef}>
         <li>
           <div className="zone">
             <div className="bloc"><span className="tuile vert">T</span></div>

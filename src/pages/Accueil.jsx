@@ -68,6 +68,8 @@ function Accueil() {
           {erreurs && <p className="erreur" role="alert">{erreurs}</p>}
           <button className="bouton" type="submit">Jouer !</button>
         </form>
+        
+        <button className="bouton secondaire" type="button" onClick={() => navigate('/regles')}> Règles du jeu </button>
       </main>
   )
 }
