@@ -12,6 +12,5 @@
 body {
   margin: 0;
   background: var(--fond);
-  color: var(--texte);
   font-family: 'Rubik', sans-serif;
 }
