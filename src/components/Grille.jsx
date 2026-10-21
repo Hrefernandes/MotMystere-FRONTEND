@@ -1,4 +1,4 @@
-import './Grille.css'
+import '../style/Grille.css'
 
 function Grille({ board, evaluations }) {
   return (
