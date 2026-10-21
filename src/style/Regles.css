@@ -1,0 +1,72 @@
+.regles {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 32px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.regles h1 {
+  margin: 0;
+  text-align: center;
+  font-family: 'Orbitron', sans-serif;
+}
+
+.regles ol {
+  margin: 0;
+  padding-left: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 18px;
+}
+
+.exemples {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.exemples li {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.exemples p {
+  margin: 0;
+  font-size: 18px;
+}
+
+.zone {
+  width: 150px;
+  height: 120px;
+  flex: none;
+  display: grid;
+  place-items: center;
+  border: 2px dashed var(--gris);
+  border-radius: 10px;
+}
+
+.exemples .tuile {
+  width: 80px;
+  height: 80px;
+  font-size: 40px;
+}
+
+.points {
+  margin: 0;
+  padding: 14px 16px;
+  text-align: center;
+  line-height: 1.6;
+  border: 1px solid var(--gris);
+  border-radius: 8px;
+}
+
+.regles .bouton {
+  align-self: center;
+}

@@ -14,7 +14,7 @@ function Accueil() {
   const [pseudo, setPseudo] = useState(localStorage.getItem('pseudo') || '') // recup son pseudo si il en a un
   const [erreurs, setErreurs] = useState('')
 
-  const tuilesRef = useRef(null) // composant gardera un valeur et si elle change elle ne recharge pas le composant
+  const tuilesRef = useRef(null) // composant gardera la valeur et si elle change elle ne recharge pas le composant
   const navigate = useNavigate()
 
   function partieStart(e) {
