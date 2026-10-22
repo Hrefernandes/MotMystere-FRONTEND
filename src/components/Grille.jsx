@@ -1,10 +1,22 @@
 import '../style/Grille.css'
 
-function Grille({ board, evaluations }) {
+function Grille({
+  board,
+  evaluations,
+  currentRow,
+  shakeKey,
+}) {
   return (
     <section className="grille" aria-label="Grille de jeu">
       {board.map((ligne, ligneIndex) => (
-        <div className="grille-ligne" key={ligneIndex}>
+        <div
+          className={`grille-ligne ${
+            ligneIndex === currentRow && shakeKey > 0
+              ? 'grille-ligne--shake'
+              : ''
+          }`}
+          key={`${ligneIndex}-${ligneIndex === currentRow ? shakeKey : 0}`}
+        >
           {ligne.map((lettre, caseIndex) => {
             const evaluation = evaluations[ligneIndex]?.[caseIndex] ?? ''
 
