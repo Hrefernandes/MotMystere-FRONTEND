@@ -1,4 +1,5 @@
 .partie {
+  box-sizing: border-box;
   color: var(--texte);
   min-height: 100vh;
   display: flex;
@@ -29,12 +30,13 @@
 }
 
 .partie-fin {
+  box-sizing: border-box;
   width: min(100%, 22rem);
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 14px;
-  padding: 20px;
+  padding: 16px;
   text-align: center;
   border: 2px solid var(--accent);
   border-radius: 12px;
@@ -47,7 +49,9 @@
 
 .partie-fin strong {
   color: var(--jaune);
-  letter-spacing: 0.2em;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  overflow-wrap: anywhere;
 }
 
 .erreurDiv {
