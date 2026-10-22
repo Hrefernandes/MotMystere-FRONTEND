@@ -1,10 +1,11 @@
 import Grille from '../components/Grille'
 import { useInputs } from '../hooks/inputs'
 import { useNavigate } from 'react-router-dom'
+import '../style/Partie.css'
 
 function Partie() {
   const navigate = useNavigate()
-  
+
   const {
   board,
   evaluations,
@@ -42,9 +43,9 @@ function Partie() {
           )}
 
           {inputError && (
-            <p className="partie-erreur" role="alert">
+            <div className="erreurDiv" role="alert">
               {inputError}
-            </p>
+            </div>
           )}
         </>
       )}

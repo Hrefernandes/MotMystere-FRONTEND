@@ -49,3 +49,28 @@
   color: var(--jaune);
   letter-spacing: 0.2em;
 }
+
+.erreurDiv {
+  position: fixed;
+  top: 24px;
+  left: 50%;
+  translate: -50% 0;
+  z-index: 20;
+  max-width: min(90%, 24rem);
+  padding: 12px 20px;
+  text-align: center;
+  font-weight: 600;
+  color: var(--texte);
+  background: var(--fond);
+  border: 2px solid var(--accent);
+  border-radius: 8px;
+  box-shadow: 0 0 18px var(--accent);
+  pointer-events: none;
+  animation: erreurDivTransition 3s ease forwards;
+}
+
+@keyframes erreurDivTransition {
+  0%        { opacity: 0; transform: translateY(-20px); }
+  10%, 80%  { opacity: 1; transform: none; }
+  100%      { opacity: 0; transform: translateY(-10px); }
+}
