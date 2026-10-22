@@ -1,23 +1,33 @@
 import Grille from '../components/Grille'
 import { useInputs } from '../hooks/inputs'
 import { useNavigate } from 'react-router-dom'
+import { saveGame } from '../utils/score'
 import '../style/Partie.css'
 
 function Partie() {
   const navigate = useNavigate()
 
   const {
-  board,
-  evaluations,
-  solutionTitle,
-  status,
-  essais,
-  points,
-  isCheckingWord,
-  inputError,
-} = useInputs()
+    board,
+    evaluations,
+    solutionTitle,
+    status,
+    essais,
+    points,
+    isCheckingWord,
+    inputError,
+  } = useInputs()
 
   function continueToEndScreen() {
+    saveGame({
+      pseudo: localStorage.getItem('pseudo') || 'Anonyme',
+      mot: solutionTitle,
+      gagne: status === 'won',
+      essais,
+      points,
+      date: new Date().toLocaleDateString('fr-CA', { timeZone: 'Europe/Paris' }),
+    })
+
     navigate('/fin-de-partie', {
       state: {
         gagne: status === 'won',
@@ -43,7 +53,7 @@ function Partie() {
           )}
 
           {inputError && (
-            <div className="erreurDiv" role="alert">
+            <div className="toast" role="alert">
               {inputError}
             </div>
           )}
