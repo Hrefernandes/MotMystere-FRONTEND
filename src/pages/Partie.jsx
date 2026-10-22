@@ -26,22 +26,22 @@ function Partie() {
   }
 
   return (
-    <main>
-      <h1>Partie</h1>
+    <main className="partie">
+      <h1 className="partie-titre">Partie</h1>
 
       <Grille board={board} evaluations={evaluations} />
 
       {status === 'playing' ? (
-        <p>Ligne actuelle : {currentRow + 1}</p>
+        <p className="partie-info">Ligne actuelle : {currentRow + 1}</p>
       ) : (
-        <section aria-live="polite">
+        <section className="partie-fin" aria-live="polite">
           {status === 'won' ? (
             <p>Bravo, tu as trouvé le mot !</p>
           ) : (
             <p>Perdu ! Le mot était : <strong>{solution}</strong></p>
           )}
 
-          <button type="button" onClick={continueToEndScreen}>
+          <button className="bouton" type="button" onClick={continueToEndScreen}>
             Continuer
           </button>
         </section>

@@ -1,0 +1,46 @@
+.partie {
+  color: var(--texte);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 24px 16px;
+}
+
+.partie-titre {
+  margin: 0;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 28px;
+  text-shadow: 0 0 14px var(--accent);
+}
+
+.partie-info {
+  margin: 0;
+  color: var(--gris);
+}
+
+.partie-fin {
+  width: min(100%, 22rem);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 20px;
+  text-align: center;
+  border: 2px solid var(--accent);
+  border-radius: 12px;
+  box-shadow: 0 0 18px var(--accent);
+}
+
+.partie-fin p {
+  margin: 0;
+}
+
+.partie-fin strong {
+  color: var(--jaune);
+  letter-spacing: 0.2em;
+}

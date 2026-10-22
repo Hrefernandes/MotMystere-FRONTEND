@@ -1,37 +1,72 @@
 .grille {
+  width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
   align-items: center;
+  gap: 0.5rem;
 }
 
 .grille-ligne {
+  width: min(100%, 22rem);
   display: grid;
-  grid-template-columns: repeat(5, 4rem);
+  grid-template-columns: repeat(5, 1fr);
   gap: 0.5rem;
 }
 
 .grille-case {
-  width: 4rem;
-  height: 4rem;
-  border: 2px solid #999;
-  background-color: white;
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  font-size: clamp(1.5rem, 8vw, 2rem);
+  font-weight: 800;
+  color: var(--texte);
+  background: transparent;
+  border: 2px solid var(--gris);
+  border-radius: 4px;
 }
 
-.grille-case--correct {
-  background-color: #4caf50;
-  border-color: #4caf50;
-  color: white;
+.grille-case:not(:empty) {
+  border-color: var(--accent);
 }
 
-.grille-case--present {
-  background-color: #d6a600;
-  border-color: #d6a600;
-  color: white;
+.grille-case--correct { --couleur: var(--vert); }
+.grille-case--present { --couleur: var(--jaune); }
+.grille-case--absent  { --couleur: var(--gris); }
+
+.grille-case.grille-case--correct,
+.grille-case.grille-case--present,
+.grille-case.grille-case--absent {
+  color: var(--blanc);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  background: var(--couleur);
+  border-color: var(--couleur);
+  animation: retourne 0.6s ease-in-out backwards;
 }
 
-.grille-case--absent {
-  background-color: #555;
-  border-color: #555;
-  color: white;
+.grille-case:nth-child(2) { animation-delay: 0.15s; }
+.grille-case:nth-child(3) { animation-delay: 0.3s; }
+.grille-case:nth-child(4) { animation-delay: 0.45s; }
+.grille-case:nth-child(5) { animation-delay: 0.6s; }
+
+@keyframes retourne {
+  0% {
+    transform: rotateX(0);
+    background: transparent;
+    border-color: var(--accent);
+  }
+  49% {
+    transform: rotateX(90deg);
+    background: transparent;
+    border-color: var(--accent);
+  }
+  50% {
+    transform: rotateX(90deg);
+    background: var(--couleur);
+    border-color: var(--couleur);
+  }
+  100% {
+    transform: rotateX(0);
+    background: var(--couleur);
+    border-color: var(--couleur);
+  }
 }
