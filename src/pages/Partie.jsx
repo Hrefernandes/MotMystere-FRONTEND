@@ -1,21 +1,21 @@
 import Grille from '../components/Grille'
 import { useInputs } from '../hooks/inputs'
 import { useNavigate } from 'react-router-dom'
+import '../style/Partie.css'
 
 function Partie() {
   const navigate = useNavigate()
+
   const {
-    board,
-    evaluations,
-    currentRow,
-    solution,
-    solutionTitle,
-    status,
-    essais,
-    points,
-    isCheckingWord,
-    inputError,
-  } = useInputs()
+  board,
+  evaluations,
+  solutionTitle,
+  status,
+  essais,
+  points,
+  isCheckingWord,
+  inputError,
+} = useInputs()
 
   function continueToEndScreen() {
     navigate('/fin-de-partie', {
@@ -29,29 +29,29 @@ function Partie() {
   }
 
   return (
-    <main>
-      <h1>Partie</h1>
+    <main className="partie">
+      <h1 className="partie-titre">Partie</h1>
 
       <Grille board={board} evaluations={evaluations} />
 
       {status === 'playing' && (
         <>
           {isCheckingWord && (
-            <p aria-live="polite">
+            <p className="partie-info" aria-live="polite">
               Vérification du mot...
             </p>
           )}
 
           {inputError && (
-            <p role="alert">
+            <div className="erreurDiv" role="alert">
               {inputError}
-            </p>
+            </div>
           )}
         </>
       )}
 
       {status !== 'playing' && (
-        <section aria-live="polite">
+        <section className="partie-fin" aria-live="polite">
           {status === 'won' ? (
             <p>
               Bravo, tu as trouvé le mot : <strong>{solutionTitle}</strong>
@@ -62,7 +62,7 @@ function Partie() {
             </p>
           )}
 
-          <button type="button" onClick={continueToEndScreen}>
+          <button className="bouton" type="button" onClick={continueToEndScreen}>
             Continuer
           </button>
         </section>
