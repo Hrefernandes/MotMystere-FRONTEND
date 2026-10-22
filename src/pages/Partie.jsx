@@ -1,24 +1,27 @@
 import Grille from '../components/Grille'
 import { useInputs } from '../hooks/inputs'
 import { useNavigate } from 'react-router-dom'
+import '../style/Partie.css'
 
 function Partie() {
   const navigate = useNavigate()
+
   const {
-    board,
-    evaluations,
-    currentRow,
-    solution,
-    status,
-    essais,
-    points,
-  } = useInputs()
+  board,
+  evaluations,
+  solutionTitle,
+  status,
+  essais,
+  points,
+  isCheckingWord,
+  inputError,
+} = useInputs()
 
   function continueToEndScreen() {
     navigate('/fin-de-partie', {
       state: {
         gagne: status === 'won',
-        mot: solution,
+        mot: solutionTitle,
         essais,
         points,
       },
@@ -26,22 +29,40 @@ function Partie() {
   }
 
   return (
-    <main>
-      <h1>Partie</h1>
+    <main className="partie">
+      <h1 className="partie-titre">Partie</h1>
 
       <Grille board={board} evaluations={evaluations} />
 
-      {status === 'playing' ? (
-        <p>Ligne actuelle : {currentRow + 1}</p>
-      ) : (
-        <section aria-live="polite">
-          {status === 'won' ? (
-            <p>Bravo, tu as trouvé le mot !</p>
-          ) : (
-            <p>Perdu ! Le mot était : <strong>{solution}</strong></p>
+      {status === 'playing' && (
+        <>
+          {isCheckingWord && (
+            <p className="partie-info" aria-live="polite">
+              Vérification du mot...
+            </p>
           )}
 
-          <button type="button" onClick={continueToEndScreen}>
+          {inputError && (
+            <div className="erreurDiv" role="alert">
+              {inputError}
+            </div>
+          )}
+        </>
+      )}
+
+      {status !== 'playing' && (
+        <section className="partie-fin" aria-live="polite">
+          {status === 'won' ? (
+            <p>
+              Bravo, tu as trouvé le mot : <strong>{solutionTitle}</strong>
+            </p>
+          ) : (
+            <p>
+              Perdu ! Le mot était : <strong>{solutionTitle}</strong>
+            </p>
+          )}
+
+          <button className="bouton" type="button" onClick={continueToEndScreen}>
             Continuer
           </button>
         </section>
