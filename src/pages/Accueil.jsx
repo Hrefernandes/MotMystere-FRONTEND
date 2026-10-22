@@ -69,7 +69,10 @@ function Accueil() {
           <button className="bouton" type="submit">Jouer !</button>
         </form>
         
-        <button className="bouton secondaire" type="button" onClick={() => navigate('/regles')}> Règles du jeu </button>
+        <div className="liens">
+          <button className="bouton secondaire" type="button" onClick={() => navigate('/regles')}>Règles</button>
+          <button className="bouton secondaire" type="button" onClick={() => navigate('/scores')}>Scores</button>
+        </div>
       </main>
   )
 }
