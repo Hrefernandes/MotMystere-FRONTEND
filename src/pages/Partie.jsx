@@ -9,6 +9,7 @@ function Partie() {
     evaluations,
     currentRow,
     solution,
+    solutionTitle,
     status,
     essais,
     points,
@@ -20,7 +21,7 @@ function Partie() {
     navigate('/fin-de-partie', {
       state: {
         gagne: status === 'won',
-        mot: solution,
+        mot: solutionTitle,
         essais,
         points,
       },
@@ -52,9 +53,13 @@ function Partie() {
       {status !== 'playing' && (
         <section aria-live="polite">
           {status === 'won' ? (
-            <p>Bravo, tu as trouvé le mot !</p>
+            <p>
+              Bravo, tu as trouvé le mot : <strong>{solutionTitle}</strong>
+            </p>
           ) : (
-            <p>Perdu ! Le mot était : <strong>{solution}</strong></p>
+            <p>
+              Perdu ! Le mot était : <strong>{solutionTitle}</strong>
+            </p>
           )}
 
           <button type="button" onClick={continueToEndScreen}>

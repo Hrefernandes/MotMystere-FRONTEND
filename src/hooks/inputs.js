@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { getRandomWord } from '../utils/gameStart'
 import { evaluateGuess } from '../utils/gameLogic'
+import { findFrenchWiktionaryTitle } from '../utils/wiktionary'
 
 const NUMBER_OF_ROWS = 6
 const WORD_LENGTH = 5
@@ -78,6 +79,7 @@ function normalizeWord(word) {
 
 export function useInputs() {
   const [solution] = useState(() => getRandomWord())
+  const [solutionTitle, setSolutionTitle] = useState(solution)
   const [board, setBoard] = useState(createEmptyBoard)
   const [currentRow, setCurrentRow] = useState(0)
   const [currentColumn, setCurrentColumn] = useState(0)
@@ -143,14 +145,15 @@ export function useInputs() {
       setInputError('')
 
       try {
-        const wordExists = await isFrenchWord(guess)
 
-        if (!wordExists) {
-          setInputError(
-            'Ce n\'est pas un mot français.',
-          )
+        const wiktionaryTitle = await findFrenchWiktionaryTitle(guess)
+
+        if (!wiktionaryTitle) {
+          setInputError('Ce n\'est pas un mot français.')
           return
         }
+        const wordExists = await isFrenchWord(guess)
+
 
         const evaluation = evaluateGuess(guess, solution)
 
@@ -163,11 +166,15 @@ export function useInputs() {
         })
 
         if (guess === solution) {
+          setSolutionTitle(wiktionaryTitle)
           setStatus('won')
           return
         }
 
         if (currentRow === NUMBER_OF_ROWS - 1) {
+          const solutionWiktionaryTitle = await findFrenchWiktionaryTitle(solution)
+
+          setSolutionTitle(solutionWiktionaryTitle ?? solution)
           setStatus('lost')
           return
         }
@@ -204,6 +211,7 @@ export function useInputs() {
     guesses,
     evaluations,
     solution,
+    solutionTitle,
     currentRow,
     status,
     isCheckingWord,
