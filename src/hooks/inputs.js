@@ -28,6 +28,7 @@ export function useInputs() {
   const [status, setStatus] = useState('playing')
   const [isCheckingWord, setIsCheckingWord] = useState(false)
   const [inputError, setInputError] = useState('')
+  const [shakeKey, setShakeKey] = useState(0)
 
   const handleKeyDown = useCallback(async (event) => {
     if (status !== 'playing' || currentRow >= NUMBER_OF_ROWS) {
@@ -88,6 +89,7 @@ export function useInputs() {
 
         if (!wiktionaryTitle) {
           setInputError('Ce n\'est pas un mot français.')
+          setShakeKey((key) => key + 1)
           return
         }
 
@@ -143,32 +145,32 @@ export function useInputs() {
     }
   }, [handleKeyDown])
 
-const keyStatuses = {}
+  const keyStatuses = {}
 
-evaluations.forEach((evaluationRow, rowIndex) => {
-  if (!evaluationRow) {
-    return
-  }
-
-  evaluationRow.forEach((letterStatus, columnIndex) => {
-    const letter = board[rowIndex][columnIndex]
-
-    if (!letter) {
+  evaluations.forEach((evaluationRow, rowIndex) => {
+    if (!evaluationRow) {
       return
     }
 
-    const previousStatus = keyStatuses[letter]
+    evaluationRow.forEach((letterStatus, columnIndex) => {
+      const letter = board[rowIndex][columnIndex]
 
-    if (
-      previousStatus === 'correct'
-      || (previousStatus === 'present' && letterStatus === 'absent')
-    ) {
-      return
-    }
+      if (!letter) {
+        return
+      }
 
-    keyStatuses[letter] = letterStatus
+      const previousStatus = keyStatuses[letter]
+
+      if (
+        previousStatus === 'correct'
+        || (previousStatus === 'present' && letterStatus === 'absent')
+      ) {
+        return
+      }
+
+      keyStatuses[letter] = letterStatus
+    })
   })
-})
 
   return {
     board,
@@ -182,6 +184,7 @@ evaluations.forEach((evaluationRow, rowIndex) => {
     inputError,
     keyStatuses,
     handleKeyDown,
+    shakeKey,
     essais: guesses.length,
     points: status === 'won' ? (NUMBER_OF_ROWS - currentRow) * 100 : 0,
   }

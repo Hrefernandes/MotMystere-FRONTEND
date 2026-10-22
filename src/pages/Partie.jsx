@@ -18,6 +18,8 @@ function Partie() {
     inputError,
     keyStatuses,
     handleKeyDown,
+    currentRow,
+    shakeKey,
   } = useInputs()
 
   function continueToEndScreen() {
@@ -35,7 +37,12 @@ function Partie() {
     <main className="partie">
       <h1 className="partie-titre">Partie</h1>
 
-      <Grille board={board} evaluations={evaluations} />
+      <Grille
+        board={board}
+        evaluations={evaluations}
+        currentRow={currentRow}
+        shakeKey={shakeKey}
+      />
 
       <Clavier
         onKeyDown={handleKeyDown}
