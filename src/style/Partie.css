@@ -11,6 +11,11 @@
   padding: 24px 16px;
 }
 
+.partie-erreur {
+  margin: 0;
+  color: var(--accent);
+}
+
 .partie-titre {
   margin: 0;
   font-family: 'Orbitron', sans-serif;
