@@ -9,6 +9,7 @@
 }
 
 .finPartie {
+  color: var(--texte);
   display: flex;
   flex-direction: column;
   width: min(90%, 420px);
