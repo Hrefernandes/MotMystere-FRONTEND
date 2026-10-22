@@ -2,20 +2,23 @@ import Grille from '../components/Grille'
 import { useInputs } from '../hooks/inputs'
 import { useNavigate } from 'react-router-dom'
 import '../style/Partie.css'
+import Clavier from '../components/Clavier'
 
 function Partie() {
   const navigate = useNavigate()
 
   const {
-  board,
-  evaluations,
-  solutionTitle,
-  status,
-  essais,
-  points,
-  isCheckingWord,
-  inputError,
-} = useInputs()
+    board,
+    evaluations,
+    solutionTitle,
+    status,
+    essais,
+    points,
+    isCheckingWord,
+    inputError,
+    keyStatuses,
+    handleKeyDown,
+  } = useInputs()
 
   function continueToEndScreen() {
     navigate('/fin-de-partie', {
@@ -33,6 +36,12 @@ function Partie() {
       <h1 className="partie-titre">Partie</h1>
 
       <Grille board={board} evaluations={evaluations} />
+
+      <Clavier
+        onKeyDown={handleKeyDown}
+        keyStatuses={keyStatuses}
+        disabled={status !== 'playing' || isCheckingWord}
+      />
 
       {status === 'playing' && (
         <>

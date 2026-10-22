@@ -13,69 +13,7 @@ function createEmptyBoard() {
   )
 }
 
-async function isFrenchWord(word) {
-  const normalizedWord = normalizeWord(word)
 
-  const searchParams = new URLSearchParams({
-    action: 'query',
-    list: 'search',
-    srsearch: word,
-    format: 'json',
-    origin: '*',
-  })
-
-  const searchResponse = await fetch(
-    `https://fr.wiktionary.org/w/api.php?${searchParams.toString()}`,
-  )
-
-  if (!searchResponse.ok) {
-    throw new Error('Impossible de contacter le Wiktionnaire')
-  }
-
-  const searchData = await searchResponse.json()
-  const searchResults = searchData.query?.search ?? []
-
-  const matchingTitles = searchResults
-    .map((result) => result.title)
-    .filter((title) => normalizeWord(title) === normalizedWord)
-
-  if (matchingTitles.length === 0) {
-    return false
-  }
-
-  const categoryParams = new URLSearchParams({
-    action: 'query',
-    titles: matchingTitles.join('|'),
-    prop: 'categories',
-    cllimit: 'max',
-    format: 'json',
-    origin: '*',
-  })
-
-  const categoryResponse = await fetch(
-    `https://fr.wiktionary.org/w/api.php?${categoryParams.toString()}`,
-  )
-
-  if (!categoryResponse.ok) {
-    throw new Error('Impossible de récupérer les catégories Wiktionary')
-  }
-
-  const categoryData = await categoryResponse.json()
-  const pages = Object.values(categoryData.query?.pages ?? {})
-
-  return pages.some((page) =>
-    page.categories?.some((category) =>
-      normalizeWord(category.title).includes('en francais'),
-    ),
-  )
-}
-
-function normalizeWord(word) {
-  return word
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .toLowerCase()
-}
 
 export function useInputs() {
   const [solution] = useState(() => getRandomWord())
@@ -152,7 +90,6 @@ export function useInputs() {
           setInputError('Ce n\'est pas un mot français.')
           return
         }
-        const wordExists = await isFrenchWord(guess)
 
 
         const evaluation = evaluateGuess(guess, solution)
@@ -206,6 +143,33 @@ export function useInputs() {
     }
   }, [handleKeyDown])
 
+const keyStatuses = {}
+
+evaluations.forEach((evaluationRow, rowIndex) => {
+  if (!evaluationRow) {
+    return
+  }
+
+  evaluationRow.forEach((letterStatus, columnIndex) => {
+    const letter = board[rowIndex][columnIndex]
+
+    if (!letter) {
+      return
+    }
+
+    const previousStatus = keyStatuses[letter]
+
+    if (
+      previousStatus === 'correct'
+      || (previousStatus === 'present' && letterStatus === 'absent')
+    ) {
+      return
+    }
+
+    keyStatuses[letter] = letterStatus
+  })
+})
+
   return {
     board,
     guesses,
@@ -216,6 +180,8 @@ export function useInputs() {
     status,
     isCheckingWord,
     inputError,
+    keyStatuses,
+    handleKeyDown,
     essais: guesses.length,
     points: status === 'won' ? (NUMBER_OF_ROWS - currentRow) * 100 : 0,
   }
