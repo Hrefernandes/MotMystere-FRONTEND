@@ -4,9 +4,15 @@ import { useNavigate } from 'react-router-dom'
 import { saveGame } from '../utils/score'
 import '../style/Partie.css'
 import Clavier from '../components/Clavier'
+import { useSearchParams } from 'react-router-dom'
 
 function Partie() {
   const navigate = useNavigate()
+
+  const [searchParams] = useSearchParams()
+  const mode = searchParams.get('mode') === 'daily'
+    ? 'daily'
+    : 'free'
 
   const {
     board,
@@ -21,7 +27,8 @@ function Partie() {
     handleKeyDown,
     currentRow,
     shakeKey,
-  } = useInputs()
+    isDailyCompleted,
+  } = useInputs(mode)
 
   function continueToEndScreen() {
     saveGame({
@@ -39,10 +46,37 @@ function Partie() {
         mot: solutionTitle,
         essais,
         points,
+        mode,
       },
     })
   }
+if (mode === 'daily' && isDailyCompleted) {
+  return (
+    <main className="partie">
+      <h1 className="partie-titre">Mot du jour terminé</h1>
 
+      <p>
+        Tu as déjà terminé le mot du jour.
+      </p>
+
+      <button
+        className="bouton"
+        type="button"
+        onClick={() => navigate('/fin-de-partie', {
+          state: {
+            gagne: status === 'won',
+            mot: solutionTitle,
+            essais,
+            points,
+            mode,
+          },
+        })}
+      >
+        Voir le résultat
+      </button>
+    </main>
+  )
+}
   return (
     <main className="partie">
       <h1 className="partie-titre">Partie</h1>

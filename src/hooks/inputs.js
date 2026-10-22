@@ -1,5 +1,9 @@
 import { useCallback, useEffect, useState } from 'react'
-import { getRandomWord } from '../utils/gameStart'
+import {
+  getDailyGameKey,
+  getDailyWord,
+  getRandomWord,
+} from '../utils/gameStart'
 import { evaluateGuess } from '../utils/gameLogic'
 import { findFrenchWiktionaryTitle } from '../utils/wiktionary'
 
@@ -13,19 +17,61 @@ function createEmptyBoard() {
   )
 }
 
+function getSavedGame(storageKey) {
+  const savedGame = localStorage.getItem(storageKey)
 
+  if (!savedGame) {
+    return null
+  }
 
-export function useInputs() {
-  const [solution] = useState(() => getRandomWord())
-  const [solutionTitle, setSolutionTitle] = useState(solution)
-  const [board, setBoard] = useState(createEmptyBoard)
-  const [currentRow, setCurrentRow] = useState(0)
-  const [currentColumn, setCurrentColumn] = useState(0)
-  const [guesses, setGuesses] = useState([])
-  const [evaluations, setEvaluations] = useState(
-    Array.from({ length: NUMBER_OF_ROWS }, () => null),
+  try {
+    return JSON.parse(savedGame)
+  } catch {
+    localStorage.removeItem(storageKey)
+    return null
+  }
+}
+
+export function useInputs(mode = 'free') {
+  const gameKey = mode === 'daily'
+    ? getDailyGameKey()
+    : `free-${crypto.randomUUID()}`
+
+  const storageKey = `mot-mystere-${mode}-${gameKey}`
+  const savedGame = getSavedGame(storageKey)
+
+  const isRestoredDailyGame = mode === 'daily'
+    && savedGame !== null
+    && savedGame.status !== 'playing'
+
+  const [solution] = useState(() => (
+    mode === 'daily'
+      ? getDailyWord()
+      : getRandomWord()
+  ))
+
+  const [solutionTitle, setSolutionTitle] = useState(
+    () => savedGame?.solutionTitle ?? solution,
   )
-  const [status, setStatus] = useState('playing')
+  const [board, setBoard] = useState(
+    () => savedGame?.board ?? createEmptyBoard(),
+  )
+  const [currentRow, setCurrentRow] = useState(
+    () => savedGame?.currentRow ?? 0,
+  )
+  const [currentColumn, setCurrentColumn] = useState(
+    () => savedGame?.currentColumn ?? 0,
+  )
+  const [guesses, setGuesses] = useState(
+    () => savedGame?.guesses ?? [],
+  )
+  const [evaluations, setEvaluations] = useState(
+    () => savedGame?.evaluations
+      ?? Array.from({ length: NUMBER_OF_ROWS }, () => null),
+  )
+  const [status, setStatus] = useState(
+    () => savedGame?.status ?? 'playing',
+  )
   const [isCheckingWord, setIsCheckingWord] = useState(false)
   const [inputError, setInputError] = useState('')
   const [shakeKey, setShakeKey] = useState(0)
@@ -145,6 +191,40 @@ export function useInputs() {
     }
   }, [handleKeyDown])
 
+  useEffect(() => {
+    if (mode !== 'daily') {
+      return
+    }
+
+    const savedGame = {
+      gameKey,
+      solution,
+      board,
+      currentRow,
+      currentColumn,
+      guesses,
+      evaluations,
+      status,
+      solutionTitle,
+    }
+
+    localStorage.setItem(storageKey, JSON.stringify(savedGame))
+  }, [
+    mode,
+    gameKey,
+    solution,
+    board,
+    currentRow,
+    currentColumn,
+    guesses,
+    evaluations,
+    status,
+    solutionTitle,
+    storageKey,
+  ])
+
+  const isDailyCompleted = mode === 'daily' && status !== 'playing'
+
   const keyStatuses = {}
 
   evaluations.forEach((evaluationRow, rowIndex) => {
@@ -187,5 +267,6 @@ export function useInputs() {
     shakeKey,
     essais: guesses.length,
     points: status === 'won' ? (NUMBER_OF_ROWS - currentRow) * 100 : 0,
+    isDailyCompleted: isRestoredDailyGame,
   }
 }

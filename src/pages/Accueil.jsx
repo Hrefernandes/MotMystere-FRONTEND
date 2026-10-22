@@ -17,15 +17,30 @@ function Accueil() {
   const tuilesRef = useRef(null) // composant gardera la valeur et si elle change elle ne recharge pas le composant
   const navigate = useNavigate()
 
-  function partieStart(e) {
-    e.preventDefault()
+  
+
+  function startFreeGame(event) {
+    event.preventDefault()
+
     if (pseudo.trim().length < 3) {
       setErreurs('Le pseudo doit contenir au moins 3 caractères')
       return
     }
+
     setErreurs('')
     localStorage.setItem('pseudo', pseudo.trim())
-    navigate('/partie')
+    navigate('/partie?mode=free')
+  }
+
+  function startDailyGame() {
+    if (pseudo.trim().length < 3) {
+      setErreurs('Le pseudo doit contenir au moins 3 caractères')
+      return
+    }
+
+    setErreurs('')
+    localStorage.setItem('pseudo', pseudo.trim())
+    navigate('/partie?mode=daily')
   }
 
   useEffect(() => {
@@ -41,40 +56,49 @@ function Accueil() {
     return () => ctx.revert()
   }, [])
 
-  
-    return (
 
-      <main className="accueil">
+  return (
 
-        <div className="tuiles" ref={tuilesRef} aria-hidden="true">
-          <div className="bloc" ><span className="tuile vert">T</span></div>
-          <div className="bloc" ><span className="tuile jaune">R</span></div>
-          <div className="bloc" ><span className="tuile gris">O</span></div>
-          <div className="bloc" ><span className="tuile vert">U</span></div>
-          <div className="bloc" ><span className="tuile gris">V</span></div>
-        </div>
+    <main className="accueil">
 
-        <p className="phraseAccroche">Trouve le bon mot, 5 lettres 6 essais</p>
+      <div className="tuiles" ref={tuilesRef} aria-hidden="true">
+        <div className="bloc" ><span className="tuile vert">T</span></div>
+        <div className="bloc" ><span className="tuile jaune">R</span></div>
+        <div className="bloc" ><span className="tuile gris">O</span></div>
+        <div className="bloc" ><span className="tuile vert">U</span></div>
+        <div className="bloc" ><span className="tuile gris">V</span></div>
+      </div>
 
-        <form className="formulaire" onSubmit={partieStart}>
-          <label htmlFor="pseudo">Ton pseudo</label>
-          <input
-            id="pseudo"
-            className="champ"
-            type="text"
-            value={pseudo}
-            onChange={(e) => setPseudo(e.target.value)}
-          />
-          {erreurs && <p className="erreur" role="alert">{erreurs}</p>}
-          <button className="bouton" type="submit">Jouer !</button>
-        </form>
-        
-        <div className="liens">
-          <button className="bouton secondaire" type="button" onClick={() => navigate('/regles')}>Règles</button>
-          <button className="bouton secondaire" type="button" onClick={() => navigate('/scores')}>Scores</button>
-          <button className="bouton secondaire" type="button" onClick={() => navigate('/stats')}>Stats</button>
-        </div>
-      </main>
+      <p className="phraseAccroche">Trouve le bon mot, 5 lettres 6 essais</p>
+
+      <form className="formulaire" onSubmit={startFreeGame}>
+        <label htmlFor="pseudo">Ton pseudo</label>
+        <input
+          id="pseudo"
+          className="champ"
+          type="text"
+          value={pseudo}
+          onChange={(e) => setPseudo(e.target.value)}
+        />
+        {erreurs && <p className="erreur" role="alert">{erreurs}</p>}
+        <button className="bouton" type="submit">
+          Partie libre
+        </button>
+      </form>
+
+      <button
+        className="bouton"
+        type="button"
+        onClick={startDailyGame}>
+        Mot du jour
+      </button>
+
+      <div className="liens">
+        <button className="bouton secondaire" type="button" onClick={() => navigate('/regles')}>Règles</button>
+        <button className="bouton secondaire" type="button" onClick={() => navigate('/scores')}>Scores</button>
+        <button className="bouton secondaire" type="button" onClick={() => navigate('/stats')}>Stats</button>
+      </div>
+    </main>
   )
 }
 
