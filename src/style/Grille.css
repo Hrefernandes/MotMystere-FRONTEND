@@ -13,6 +13,33 @@
   gap: 0.5rem;
 }
 
+.grille-ligne--shake {
+  animation: tremblement 0.45s ease-in-out;
+}
+
+@keyframes tremblement {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+
+  20% {
+    transform: translateX(-8px);
+  }
+
+  40% {
+    transform: translateX(8px);
+  }
+
+  60% {
+    transform: translateX(-6px);
+  }
+
+  80% {
+    transform: translateX(6px);
+  }
+}
+
 .grille-case {
   aspect-ratio: 1;
   display: grid;

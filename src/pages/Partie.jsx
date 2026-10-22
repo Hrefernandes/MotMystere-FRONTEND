@@ -3,6 +3,7 @@ import { useInputs } from '../hooks/inputs'
 import { useNavigate } from 'react-router-dom'
 import { saveGame } from '../utils/score'
 import '../style/Partie.css'
+import Clavier from '../components/Clavier'
 
 function Partie() {
   const navigate = useNavigate()
@@ -16,6 +17,10 @@ function Partie() {
     points,
     isCheckingWord,
     inputError,
+    keyStatuses,
+    handleKeyDown,
+    currentRow,
+    shakeKey,
   } = useInputs()
 
   function continueToEndScreen() {
@@ -42,7 +47,18 @@ function Partie() {
     <main className="partie">
       <h1 className="partie-titre">Partie</h1>
 
-      <Grille board={board} evaluations={evaluations} />
+      <Grille
+        board={board}
+        evaluations={evaluations}
+        currentRow={currentRow}
+        shakeKey={shakeKey}
+      />
+
+      <Clavier
+        onKeyDown={handleKeyDown}
+        keyStatuses={keyStatuses}
+        disabled={status !== 'playing' || isCheckingWord}
+      />
 
       {status === 'playing' && (
         <>
