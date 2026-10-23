@@ -1,6 +1,6 @@
 import Grille from '../components/Grille'
 import { useInputs } from '../hooks/inputs'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { saveGame } from '../utils/score'
 import '../style/Partie.css'
 import Clavier from '../components/Clavier'
@@ -10,7 +10,9 @@ function Partie() {
   const navigate = useNavigate()
 
   const [searchParams] = useSearchParams()
-  const mode = searchParams.get('mode') 
+  const mode = searchParams.get('mode') === 'daily'
+    ? 'daily'
+    : 'free'
 
   const {
     board,
@@ -25,7 +27,8 @@ function Partie() {
     handleKeyDown,
     currentRow,
     shakeKey,
-  } = useInputs()
+    isDailyCompleted,
+  } = useInputs(mode)
 
   function continueToEndScreen() {
     saveGame({
@@ -34,6 +37,7 @@ function Partie() {
       gagne: status === 'won',
       essais,
       points,
+      mode,
       date: new Date().toLocaleDateString('fr-CA', { timeZone: 'Europe/Paris' }),
     })
 
@@ -43,8 +47,39 @@ function Partie() {
         mot: solutionTitle,
         essais,
         points,
+        mode,
       },
     })
+  }
+
+  if (mode === 'daily' && isDailyCompleted) {
+    return (
+      <main className="partie">
+        <h1 className="partie-titre">Mot du jour terminé</h1>
+
+        <p>Tu as déjà terminé le mot du jour.</p>
+
+        <CompteARebours />
+
+        <button
+          className="bouton"
+          type="button"
+          onClick={() =>
+            navigate('/fin-de-partie', {
+              state: {
+                gagne: status === 'won',
+                mot: solutionTitle,
+                essais,
+                points,
+                mode,
+              },
+            })
+          }
+        >
+          Voir le résultat
+        </button>
+      </main>
+    )
   }
 
   return (
@@ -75,31 +110,3 @@ function Partie() {
           {inputError && (
             <div className="toast" role="alert">
               {inputError}
-            </div>
-          )}
-        </>
-      )}
-
-      {status !== 'playing' && (
-        <section className="partie-fin" aria-live="polite">
-          {mode === 'jour' && <CompteARebours />}
-          {status === 'won' ? (
-            <p>
-              Bravo, tu as trouvé le mot : <strong>{solutionTitle}</strong>
-            </p>
-          ) : (
-            <p>
-              Perdu ! Le mot était : <strong>{solutionTitle}</strong>
-            </p>
-          )}
-
-          <button className="bouton" type="button" onClick={continueToEndScreen}>
-            Continuer
-          </button>
-        </section>
-      )}
-    </main>
-  )
-}
-
-export default Partie

@@ -9,6 +9,7 @@ function FinDePartie() {
     mot = '',
     essais = 0,
     points = 0,
+    mode = 'free',
   } = state ?? {}
 
   const wiktionaryUrl = `https://fr.wiktionary.org/wiki/${encodeURIComponent(mot)}`
@@ -57,9 +58,15 @@ function FinDePartie() {
         <p className="fin-points">+ {points} points</p>
 
         <div className="fin-boutons">
-          <button className="fin-bouton" type="button" onClick={() => navigate('/partie')}>
-            Rejouer
-          </button>
+          {mode === 'free' && (
+            <button
+              className="fin-bouton"
+              type="button"
+              onClick={() => navigate('/partie?mode=free')}
+            >
+              Rejouer
+            </button>
+          )}
           <button className="fin-bouton secondaire" type="button" onClick={() => navigate('/')}>
             Accueil
           </button>

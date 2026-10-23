@@ -1,3 +1,6 @@
+const API_USER_AGENT =
+  'MotMystere-FRONTEND/1.0 (https://github.com/Hrefernandes/MotMystere-FRONTEND)'
+
 function normalizeWord(word) {
   return word
     .normalize('NFD')
@@ -22,6 +25,11 @@ export async function findFrenchWiktionaryTitle(word) {
 
   const searchResponse = await fetch(
     `https://fr.wiktionary.org/w/api.php?${searchParams.toString()}`,
+    {
+      headers: {
+        'Api-User-Agent': API_USER_AGENT,
+      },
+    },
   )
 
   if (!searchResponse.ok) {
@@ -50,6 +58,11 @@ export async function findFrenchWiktionaryTitle(word) {
 
   const categoryResponse = await fetch(
     `https://fr.wiktionary.org/w/api.php?${categoryParams.toString()}`,
+    {
+      headers: {
+        'Api-User-Agent': API_USER_AGENT,
+      },
+    },
   )
 
   if (!categoryResponse.ok) {
