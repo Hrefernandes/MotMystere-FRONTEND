@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from "react"
 import gsap from 'gsap' // animation GSAP
 import { Draggable } from 'gsap/Draggable' // Drag un pièce
 import { InertiaPlugin } from 'gsap/InertiaPlugin' // Effet d'inertie d'une pièce
+import { isDailyDone } from '../utils/dailyStatus'
 
 import { useNavigate } from "react-router-dom"
 import '../style/Accueil.css'
@@ -13,6 +14,7 @@ function Accueil() {
 
   const [pseudo, setPseudo] = useState(localStorage.getItem('pseudo') || '') // recup son pseudo si il en a un
   const [erreurs, setErreurs] = useState('')
+  const [dailyDone] = useState(isDailyDone)
 
   const tuilesRef = useRef(null) // composant gardera la valeur et si elle change elle ne recharge pas le composant
   const navigate = useNavigate()
@@ -86,12 +88,18 @@ function Accueil() {
         </button>
       </form>
 
-      <button
-        className="bouton"
-        type="button"
-        onClick={startDailyGame}>
-        Mot du jour
-      </button>
+      <div className="jour">
+
+        <button
+          className="bouton"
+          type="button"
+          onClick={startDailyGame}>
+          Mot du jour
+        </button>
+        {dailyDone && <span className="badge-termine">✓ Terminé</span>}
+
+      </div>
+
 
       <div className="liens">
         <button className="bouton secondaire" type="button" onClick={() => navigate('/regles')}>Règles</button>
