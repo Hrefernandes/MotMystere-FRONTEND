@@ -53,7 +53,7 @@ function Partie() {
     })
   }
 
-  if (mode === 'daily' && isDailyCompleted) {
+    if (mode === 'daily' && isDailyCompleted) {
     return (
       <main className="partie">
         <h1 className="partie-titre">Mot du jour terminé</h1>
@@ -62,25 +62,28 @@ function Partie() {
 
         <CompteARebours />
 
-      <button
-        className="bouton"
-        type="button"
-        onClick={() => navigate('/fin-de-partie', {
-          state: {
-            gagne: status === 'won',
-            mot: solutionTitle,
-            essais,
-            points,
-            mode,
-            evaluations
-          },
-        })}
-      >
-        Voir le résultat
-      </button>
-    </main>
-  )
-}
+        <button
+          className="bouton"
+          type="button"
+          onClick={() =>
+            navigate('/fin-de-partie', {
+              state: {
+                gagne: status === 'won',
+                mot: solutionTitle,
+                essais,
+                points,
+                mode,
+                evaluations,
+              },
+            })
+          }
+        >
+          Voir le résultat
+        </button>
+      </main>
+    )
+  }
+
   return (
     <main className="partie">
       <h1 className="partie-titre">Partie</h1>
