@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { secondesAvantMinuit } from '../utils/countdown'
+import { secondAfterMidnight } from '../utils/countdown'
 
 function formater(total) {
   const h = String(Math.floor(total / 3600)).padStart(2, '0')
@@ -9,10 +9,10 @@ function formater(total) {
 }
 
 function CompteARebours() {
-  const [reste, setReste] = useState(secondesAvantMinuit())
+  const [reste, setReste] = useState(secondAfterMidnight())
 
   useEffect(() => {
-    const id = setInterval(() => setReste(secondesAvantMinuit()), 1000)
+    const id = setInterval(() => setReste(secondAfterMidnight()), 1000)
     return () => clearInterval(id)
   }, [])
 

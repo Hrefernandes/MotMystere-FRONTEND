@@ -56,6 +56,15 @@ function Partie() {
     if (mode === 'daily' && isDailyCompleted) {
     return (
       <main className="partie">
+        <button
+          className="retour"
+          type="button"
+          aria-label="Retour à l'accueil"
+          onClick={() => navigate('/')}
+        >
+          ← Accueil
+        </button>
+
         <h1 className="partie-titre">Mot du jour terminé</h1>
 
         <p>Tu as déjà terminé le mot du jour.</p>
@@ -86,6 +95,15 @@ function Partie() {
 
   return (
     <main className="partie">
+
+       <button
+          className="retour"
+          type="button"
+          aria-label="Retour à l'accueil"
+          onClick={() => navigate('/')}
+        >
+          ← Accueil
+        </button>
       <h1 className="partie-titre">Partie</h1>
 
       <Grille
