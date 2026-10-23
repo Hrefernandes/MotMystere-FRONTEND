@@ -15,6 +15,7 @@ function Stats() {
     { valeur: `${pourcentage} %`, nom: 'Victoires' },
     { valeur: stats.serieActuelle, nom: 'Série en cours' },
     { valeur: stats.meilleureSerie, nom: 'Meilleure série' },
+    { valeur: stats.totalPoints, nom: 'Total des points' },
   ]
 
   const maximum = Math.max(...stats.repartition, 1)
