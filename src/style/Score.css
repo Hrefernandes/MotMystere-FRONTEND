@@ -82,3 +82,28 @@
   color: var(--texte);
   opacity: 0.6;
 }
+
+.scores-onglets {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+}
+
+.scores-onglet {
+  flex: 1;
+  padding: 10px;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--texte);
+  background: transparent;
+  border: 2px solid var(--gris);
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.scores-onglet.actif {
+  color: var(--noir);
+  background: var(--accent);
+  border-color: var(--accent);
+}
