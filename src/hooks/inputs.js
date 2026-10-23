@@ -223,8 +223,6 @@ export function useInputs(mode = 'free') {
     storageKey,
   ])
 
-  const isDailyCompleted = mode === 'daily' && status !== 'playing'
-
   const keyStatuses = {}
 
   evaluations.forEach((evaluationRow, rowIndex) => {
