@@ -47,6 +47,7 @@ function Partie() {
         essais,
         points,
         mode,
+        evaluations,
       },
     })
   }
@@ -69,6 +70,7 @@ if (mode === 'daily' && isDailyCompleted) {
             essais,
             points,
             mode,
+            evaluations
           },
         })}
       >
