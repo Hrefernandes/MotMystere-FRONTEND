@@ -103,6 +103,10 @@
   font-variant-numeric: tabular-nums;
 }
 
+.stats-chiffre:last-child {
+  grid-column: 1 / -1;
+}
+
 @keyframes grandit {
   from { transform: scaleX(0); }
   to   { transform: scaleX(1); }

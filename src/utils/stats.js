@@ -25,5 +25,6 @@ export function calculateStats(parties) {
     serieActuelle,
     meilleureSerie,
     repartition,
+    totalPoints: parties.reduce((somme, partie) => somme + partie.points, 0),
   }
 }
