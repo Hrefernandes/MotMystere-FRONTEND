@@ -4,9 +4,13 @@ import { useNavigate } from 'react-router-dom'
 import { saveGame } from '../utils/score'
 import '../style/Partie.css'
 import Clavier from '../components/Clavier'
+import CompteARebours from '../components/CompteARebours'
 
 function Partie() {
   const navigate = useNavigate()
+
+  const [searchParams] = useSearchParams()
+  const mode = searchParams.get('mode') 
 
   const {
     board,
@@ -78,6 +82,7 @@ function Partie() {
 
       {status !== 'playing' && (
         <section className="partie-fin" aria-live="polite">
+          {mode === 'jour' && <CompteARebours />}
           {status === 'won' ? (
             <p>
               Bravo, tu as trouvé le mot : <strong>{solutionTitle}</strong>

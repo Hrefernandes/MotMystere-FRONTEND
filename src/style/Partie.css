@@ -73,6 +73,13 @@
   animation: erreurDivTransition 3s ease forwards;
 }
 
+.compte {
+  margin: 0;
+  font-family: 'Orbitron', sans-serif;
+  color: var(--jaune);
+  letter-spacing: 0.1em;
+}
+
 @keyframes erreurDivTransition {
   0%        { opacity: 0; transform: translateY(-20px); }
   10%, 80%  { opacity: 1; transform: none; }
