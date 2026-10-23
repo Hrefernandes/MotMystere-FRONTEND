@@ -18,6 +18,7 @@ function App() {
       <Route path="/regles" element={<Regles />} />
       <Route path="/scores" element={<Scores />} />
       <Route path="/stats" element={<Stats />} />
+      <Route path="/*" element={<Accueil/>}/>
     </Routes>
   )
 }
