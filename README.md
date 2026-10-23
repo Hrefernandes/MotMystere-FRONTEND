@@ -10,7 +10,7 @@ Palier visé :
 Palier 1 : Validé
 Palier 2 : Validé
 Palier 3 : Validé
-Palier 4 : En cours
+Palier 4 : Validé
 
 Pour lancer l'application en local, récuperer le code du depot github, exécutter npm install en ligne de commande puis npm run dev. L'application est également accessbile en ligne via https://mot-mystere-frontend.vercel.app/
 
