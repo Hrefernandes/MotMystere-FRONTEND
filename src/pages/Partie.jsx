@@ -48,11 +48,12 @@ function Partie() {
         essais,
         points,
         mode,
+        evaluations,
       },
     })
   }
 
-  if (mode === 'daily' && isDailyCompleted) {
+    if (mode === 'daily' && isDailyCompleted) {
     return (
       <main className="partie">
         <h1 className="partie-titre">Mot du jour terminé</h1>
@@ -72,6 +73,7 @@ function Partie() {
                 essais,
                 points,
                 mode,
+                evaluations,
               },
             })
           }
