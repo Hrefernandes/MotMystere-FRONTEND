@@ -110,3 +110,31 @@ function Partie() {
           {inputError && (
             <div className="toast" role="alert">
               {inputError}
+            </div>
+          )}
+        </>
+      )}
+
+      {status !== 'playing' && (
+        <section className="partie-fin" aria-live="polite">
+          {mode === 'daily' && <CompteARebours />}
+          {status === 'won' ? (
+            <p>
+              Bravo, tu as trouvé le mot : <strong>{solutionTitle}</strong>
+            </p>
+          ) : (
+            <p>
+              Perdu ! Le mot était : <strong>{solutionTitle}</strong>
+            </p>
+          )}
+
+          <button className="bouton" type="button" onClick={continueToEndScreen}>
+            Continuer
+          </button>
+        </section>
+      )}
+    </main>
+  )
+}
+
+export default Partie
