@@ -20,9 +20,17 @@ function FinDePartie() {
     points = 0,
     mode = 'free',
     evaluations = [],
+    wordLength,
+    difficulty,
   } = state ?? {}
 
   const wiktionaryUrl = `https://fr.wiktionary.org/wiki/${encodeURIComponent(mot)}`
+
+  const maxAttempts = wordLength === 7
+    ? 8
+    : wordLength === 6
+      ? 7
+      : 6
 
   async function handleShare() {
     const shareText = createShareText({
@@ -103,7 +111,9 @@ function FinDePartie() {
             <button
               className="fin-bouton"
               type="button"
-              onClick={() => navigate('/partie?mode=free')}
+              onClick={() => navigate(
+                `/partie?mode=free&length=${wordLength}&difficulty=${difficulty}`,
+              )}
             >
               Rejouer
             </button>
@@ -145,7 +155,7 @@ function createShareText({ essais, evaluations }) {
     ))
 
   return [
-    `Le Mot Mystère ${getShareDate()} · ${essais}/6`,
+    `Le Mot Mystère ${getShareDate()} · ${essais}/${maxAttempts}`,
     ...rows,
   ].join('\n')
 }

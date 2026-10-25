@@ -1,10 +1,14 @@
 import { evaluateGuess } from '../utils/gameLogic'
 import { findFrenchWiktionaryTitle } from '../utils/wiktionary'
+import { useCallback, useEffect } from 'react'
+import { validateHardModeGuess } from '../utils/hardMode'
 
 export function useGameKeyboard({
     board,
     currentRow,
     currentColumn,
+    wordLength,
+    numberOfRows,
     isCheckingWord,
     solution,
     status,
@@ -18,14 +22,17 @@ export function useGameKeyboard({
     setShakeKey,
     setSolutionTitle,
     setStatus,
+    setShakeRow,
+    difficulty,
+    evaluations,
 }) {
     const handleKeyDown = useCallback(async (event) => {
-        if (status !== 'playing' || currentRow >= NUMBER_OF_ROWS) {
+        if (status !== 'playing' || currentRow >= numberOfRows) {
             return
         }
 
         if (/^[a-zA-Z]$/.test(event.key)) {
-            if (currentColumn >= WORD_LENGTH) {
+            if (currentColumn >= wordLength) {
                 return
             }
 
@@ -63,7 +70,7 @@ export function useGameKeyboard({
         if (event.key === 'Enter') {
             event.preventDefault()
 
-            if (currentColumn !== WORD_LENGTH || isCheckingWord) {
+            if (currentColumn !== wordLength || isCheckingWord) {
                 return
             }
 
@@ -73,12 +80,26 @@ export function useGameKeyboard({
             setInputError('')
 
             try {
+                if (difficulty === 'hard') {
+                    const hardModeError = validateHardModeGuess(
+                        guess,
+                        board,
+                        evaluations,
+                    )
 
+                    if (hardModeError) {
+                        setInputError(hardModeError)
+                        setShakeKey((key) => key + 1)
+                        setShakeRow(currentRow)
+                        return
+                    }
+                }
                 const wiktionaryTitle = await findFrenchWiktionaryTitle(guess)
 
                 if (!wiktionaryTitle) {
                     setInputError('Ce n\'est pas un mot français.')
                     setShakeKey((key) => key + 1)
+                    setShakeRow(currentRow)
                     return
                 }
 
@@ -99,7 +120,7 @@ export function useGameKeyboard({
                     return
                 }
 
-                if (currentRow === NUMBER_OF_ROWS - 1) {
+                if (currentRow === numberOfRows - 1) {
                     const solutionWiktionaryTitle = await findFrenchWiktionaryTitle(solution)
 
                     setSolutionTitle(solutionWiktionaryTitle ?? solution)
@@ -122,9 +143,13 @@ export function useGameKeyboard({
             board,
             currentColumn,
             currentRow,
+            difficulty,
+            evaluations,
             isCheckingWord,
+            numberOfRows,
             solution,
             status,
+            wordLength,
         ])
 
     useEffect(() => {

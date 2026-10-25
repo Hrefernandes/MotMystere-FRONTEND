@@ -1,6 +1,20 @@
-import motsSolutions from '../data/mots_solutions.json'
+import motsSolutions5 from '../data/mots_solutions_5.json'
+import motsSolutions6 from '../data/mots_solutions_6.json'
+import motsSolutions7 from '../data/mots_solutions_7.json'
 
-export function getRandomWord() {
+const WORD_LISTS = {
+    5: motsSolutions5,
+    6: motsSolutions6,
+    7: motsSolutions7,
+}
+
+export function getRandomWord(wordLength = 5) {
+    const motsSolutions = WORD_LISTS[wordLength]
+
+    if (!motsSolutions) {
+        throw new Error(`Aucune liste disponible pour ${wordLength} lettres.`)
+    }
+
     const randomIndex = Math.floor(Math.random() * motsSolutions.length)
 
     return motsSolutions[randomIndex]
@@ -27,9 +41,9 @@ function hashString(value) {
 
 export function getDailyWord() {
     const dateKey = getDateKey()
-    const wordIndex = hashString(dateKey) % motsSolutions.length
+    const wordIndex = hashString(dateKey) % motsSolutions5.length
 
-    return motsSolutions[wordIndex]
+    return motsSolutions5[wordIndex]
 }
 
 export function getDailyGameKey() {

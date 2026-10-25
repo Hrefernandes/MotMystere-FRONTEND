@@ -1,17 +1,29 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { getDailyGameKey, getDailyWord, getRandomWord, } from '../utils/gameStart'
-
-import { getKeyStatuses, createEmptyBoard, NUMBER_OF_ROWS } from '../utils/gameboard'
+import { getKeyStatuses, createEmptyBoard, getGameConfig } from '../utils/gameBoard'
 import { getSavedGame, saveDailyGame } from '../utils/gameStorage'
 import { useGameKeyboard } from '../hooks/useGameKeyboard'
 
 
-export function useInputs(mode = 'free') {
+export function useInputs(
+  mode = 'free',
+  wordLength = 5,
+  difficulty = 'normal',
+) {
+  const { attempts, multiplier } = getGameConfig(wordLength)
+
+  const pointMultiplier = difficulty === 'hard'
+    ? 1.5
+    : multiplier
+
+  const freeGameId = useRef(crypto.randomUUID()).current
+
   const gameKey = mode === 'daily'
     ? getDailyGameKey()
-    : `free-${crypto.randomUUID()}`
+    : `free-${wordLength}-${difficulty}-${freeGameId}`
 
-  const storageKey = `mot-mystere-${mode}-${gameKey}`
+  const storageKey = `mot-mystere-${mode}-${wordLength}-${difficulty}-${gameKey}`
+
   const savedGame = getSavedGame(storageKey)
 
   const isRestoredDailyGame = mode === 'daily'
@@ -21,26 +33,33 @@ export function useInputs(mode = 'free') {
   const [solution] = useState(() => (
     mode === 'daily'
       ? getDailyWord()
-      : getRandomWord()
+      : getRandomWord(wordLength)
   ))
 
   const [solutionTitle, setSolutionTitle] = useState(() => savedGame?.solutionTitle ?? solution)
-  const [board, setBoard] = useState(() => savedGame?.board ?? createEmptyBoard())
+  const [board, setBoard] = useState(() => (
+    savedGame?.board ?? createEmptyBoard(wordLength, attempts)
+  ))
   const [currentRow, setCurrentRow] = useState(() => savedGame?.currentRow ?? 0)
   const [currentColumn, setCurrentColumn] = useState(() => savedGame?.currentColumn ?? 0)
   const [guesses, setGuesses] = useState(() => savedGame?.guesses ?? [])
   const [evaluations, setEvaluations] = useState(() => savedGame?.evaluations ??
-    Array.from({ length: NUMBER_OF_ROWS }, () => null)
+    Array.from({ length: attempts }, () => null)
   )
   const [status, setStatus] = useState(() => savedGame?.status ?? 'playing')
   const [isCheckingWord, setIsCheckingWord] = useState(false)
   const [inputError, setInputError] = useState('')
   const [shakeKey, setShakeKey] = useState(0)
+  const [shakeRow, setShakeRow] = useState(null)
 
   const handleKeyDown = useGameKeyboard({
     board,
     currentRow,
     currentColumn,
+    wordLength,
+    numberOfRows: attempts,
+    difficulty,
+    evaluations,
     isCheckingWord,
     solution,
     status,
@@ -54,15 +73,8 @@ export function useInputs(mode = 'free') {
     setShakeKey,
     setSolutionTitle,
     setStatus,
+    setShakeRow
   })
-
-  useEffect(() => {
-    window.addEventListener('keydown', handleKeyDown)
-
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown)
-    }
-  }, [handleKeyDown])
 
   useEffect(() => {
     if (mode !== 'daily') {
@@ -109,8 +121,11 @@ export function useInputs(mode = 'free') {
     keyStatuses,
     handleKeyDown,
     shakeKey,
+    shakeRow,
     essais: guesses.length,
-    points: status === 'won' ? (NUMBER_OF_ROWS - currentRow) * 100 : 0,
+    points: status === 'won'
+      ? Math.round((attempts - currentRow) * 100 * pointMultiplier)
+      : 0,
     isDailyCompleted: isRestoredDailyGame,
   }
 }

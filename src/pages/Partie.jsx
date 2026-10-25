@@ -14,6 +14,17 @@ function Partie() {
     ? 'daily'
     : 'free'
 
+  const requestedLength = Number(searchParams.get('length'))
+  const wordLength = [5, 6, 7].includes(requestedLength)
+    ? requestedLength
+    : 5
+
+  const difficulty = searchParams.get('difficulty') === 'hard'
+    && mode === 'free'
+    && wordLength === 5
+    ? 'hard'
+    : 'normal'
+
   const {
     board,
     evaluations,
@@ -27,8 +38,9 @@ function Partie() {
     handleKeyDown,
     currentRow,
     shakeKey,
+    shakeRow,
     isDailyCompleted,
-  } = useInputs(mode)
+  } = useInputs(mode, wordLength, difficulty)
 
   function continueToEndScreen() {
     saveGame({
@@ -38,6 +50,8 @@ function Partie() {
       essais,
       points,
       mode,
+      difficulty,
+      wordLength,
       date: new Date().toLocaleDateString('fr-CA', { timeZone: 'Europe/Paris' }),
     })
 
@@ -49,6 +63,8 @@ function Partie() {
         points,
         mode,
         evaluations,
+        wordLength,
+        difficulty,
       },
     })
   }
@@ -72,7 +88,9 @@ function Partie() {
             essais,
             points,
             mode,
-            evaluations
+            evaluations,
+            wordLength,
+            difficulty,
           },
         })}
       >
@@ -90,6 +108,7 @@ function Partie() {
         evaluations={evaluations}
         currentRow={currentRow}
         shakeKey={shakeKey}
+        shakeRow={shakeRow}
       />
 
       <Clavier

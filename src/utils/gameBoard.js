@@ -1,10 +1,26 @@
-export const NUMBER_OF_ROWS = 6
-export const WORD_LENGTH = 5
+export const GAME_CONFIG = {
+  5: {
+    attempts: 6,
+    multiplier: 1,
+  },
+  6: {
+    attempts: 7,
+    multiplier: 1.5,
+  },
+  7: {
+    attempts: 8,
+    multiplier: 2,
+  },
+}
 
-export function createEmptyBoard() {
+export function getGameConfig(wordLength) {
+  return GAME_CONFIG[wordLength] ?? GAME_CONFIG[5]
+}
+
+export function createEmptyBoard(wordLength, numberOfRows) {
   return Array.from(
-    { length: NUMBER_OF_ROWS },
-    () => Array(WORD_LENGTH).fill(''),
+    { length: numberOfRows },
+    () => Array(wordLength).fill(''),
   )
 }
 
