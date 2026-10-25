@@ -6,7 +6,7 @@ export function evaluateGuess(guess, solution) {
     remainingLetters[letter] = (remainingLetters[letter] ?? 0) + 1
   }
 
-  // Première étape : trouver les lettres bien placées
+
   for (let index = 0; index < guess.length; index += 1) {
     if (guess[index] === solution[index]) {
       result[index] = 'correct'
@@ -14,7 +14,6 @@ export function evaluateGuess(guess, solution) {
     }
   }
 
-  // Deuxième étape : trouver les lettres présentes mais mal placées
   for (let index = 0; index < guess.length; index += 1) {
     if (result[index] === 'correct') {
       continue

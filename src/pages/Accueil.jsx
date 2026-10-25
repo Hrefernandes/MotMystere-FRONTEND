@@ -21,9 +21,7 @@ function Accueil() {
 
   
 
-  function startFreeGame(event) {
-    event.preventDefault()
-
+  function startFreeGame(wordLength) {
     if (pseudo.trim().length < 3) {
       setErreurs('Le pseudo doit contenir au moins 3 caractères')
       return
@@ -31,7 +29,9 @@ function Accueil() {
 
     setErreurs('')
     localStorage.setItem('pseudo', pseudo.trim())
-    navigate('/partie?mode=free')
+    localStorage.setItem('mot-mystere-word-length', String(wordLength))
+
+    navigate(`/partie?mode=free&length=${wordLength}`)
   }
 
   function startDailyGame() {
@@ -43,6 +43,19 @@ function Accueil() {
     setErreurs('')
     localStorage.setItem('pseudo', pseudo.trim())
     navigate('/partie?mode=daily')
+  }
+
+  function startHardGame() {
+    if (pseudo.trim().length < 3) {
+      setErreurs('Le pseudo doit contenir au moins 3 caractères')
+      return
+    }
+
+    setErreurs('')
+    localStorage.setItem('pseudo', pseudo.trim())
+    localStorage.setItem('mot-mystere-word-length', '5')
+
+    navigate('/partie?mode=free&length=5&difficulty=hard')
   }
 
   useEffect(() => {
@@ -73,7 +86,13 @@ function Accueil() {
 
       <p className="phraseAccroche">Trouve le bon mot, 5 lettres 6 essais</p>
 
-      <form className="formulaire" onSubmit={startFreeGame}>
+      <form
+        className="formulaire"
+        onSubmit={(event) => {
+          event.preventDefault()
+          startFreeGame(5)
+        }}
+      >
         <label htmlFor="pseudo">Ton pseudo</label>
         <input
           id="pseudo"
@@ -100,6 +119,32 @@ function Accueil() {
 
       </div>
 
+
+      <button
+        className="bouton"
+        type="button"
+        onClick={startHardGame}>
+        Partie difficile
+      </button>
+
+      <div className="choix-longueur">
+        <button
+          className="bouton"
+          type="button"
+          onClick={() => startFreeGame(6)}
+
+        >
+          Partie libre - 6 lettres
+        </button>
+
+        <button
+          className="bouton"
+          type="button"
+          onClick={() => startFreeGame(7)}
+        >
+          Partie libre - 7 lettres
+        </button>
+      </div>
 
       <div className="liens">
         <button className="bouton secondaire" type="button" onClick={() => navigate('/regles')}>Règles</button>

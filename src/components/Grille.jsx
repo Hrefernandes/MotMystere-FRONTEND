@@ -5,16 +5,20 @@ function Grille({
   evaluations,
   currentRow,
   shakeKey,
+  shakeRow,
 }) {
   return (
     <section className="grille" aria-label="Grille de jeu">
       {board.map((ligne, ligneIndex) => (
         <div
           className={`grille-ligne ${
-            ligneIndex === currentRow && shakeKey > 0
+            ligneIndex === shakeRow
               ? 'grille-ligne--shake'
               : ''
           }`}
+          style={{
+            '--word-length': ligne.length,
+          }}
           key={`${ligneIndex}-${ligneIndex === currentRow ? shakeKey : 0}`}
         >
           {ligne.map((lettre, caseIndex) => {
