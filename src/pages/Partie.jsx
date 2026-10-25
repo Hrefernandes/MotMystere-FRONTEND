@@ -14,6 +14,17 @@ function Partie() {
     ? 'daily'
     : 'free'
 
+  const requestedLength = Number(searchParams.get('length'))
+  const wordLength = [5, 6, 7].includes(requestedLength)
+    ? requestedLength
+    : 5
+
+  const difficulty = searchParams.get('difficulty') === 'hard'
+    && mode === 'free'
+    && wordLength === 5
+    ? 'hard'
+    : 'normal'
+
   const {
     board,
     evaluations,
@@ -21,14 +32,16 @@ function Partie() {
     status,
     essais,
     points,
+    temps,
     isCheckingWord,
     inputError,
     keyStatuses,
     handleKeyDown,
     currentRow,
     shakeKey,
+    shakeRow,
     isDailyCompleted,
-  } = useInputs(mode)
+  } = useInputs(mode, wordLength, difficulty)
 
   function continueToEndScreen() {
     saveGame({
@@ -37,7 +50,10 @@ function Partie() {
       gagne: status === 'won',
       essais,
       points,
+      temps,
       mode,
+      difficulty,
+      wordLength,
       date: new Date().toLocaleDateString('fr-CA', { timeZone: 'Europe/Paris' }),
     })
 
@@ -49,6 +65,8 @@ function Partie() {
         points,
         mode,
         evaluations,
+        wordLength,
+        difficulty,
       },
     })
   }
@@ -56,36 +74,53 @@ function Partie() {
     if (mode === 'daily' && isDailyCompleted) {
     return (
       <main className="partie">
+        <button
+          className="retour"
+          type="button"
+          aria-label="Retour à l'accueil"
+          onClick={() => navigate('/')}
+        >
+          ← Accueil
+        </button>
+
         <h1 className="partie-titre">Mot du jour terminé</h1>
 
         <p>Tu as déjà terminé le mot du jour.</p>
 
         <CompteARebours />
 
-        <button
-          className="bouton"
-          type="button"
-          onClick={() =>
-            navigate('/fin-de-partie', {
-              state: {
-                gagne: status === 'won',
-                mot: solutionTitle,
-                essais,
-                points,
-                mode,
-                evaluations,
-              },
-            })
-          }
-        >
-          Voir le résultat
-        </button>
-      </main>
-    )
-  }
-
+      <button
+        className="bouton"
+        type="button"
+        onClick={() => navigate('/fin-de-partie', {
+          state: {
+            gagne: status === 'won',
+            mot: solutionTitle,
+            essais,
+            points,
+            mode,
+            evaluations,
+            wordLength,
+            difficulty,
+          },
+        })}
+      >
+        Voir le résultat
+      </button>
+    </main>
+  )
+}
   return (
     <main className="partie">
+
+       <button
+          className="retour"
+          type="button"
+          aria-label="Retour à l'accueil"
+          onClick={() => navigate('/')}
+        >
+          ← Accueil
+        </button>
       <h1 className="partie-titre">Partie</h1>
 
       <Grille
@@ -93,6 +128,7 @@ function Partie() {
         evaluations={evaluations}
         currentRow={currentRow}
         shakeKey={shakeKey}
+        shakeRow={shakeRow}
       />
 
       <Clavier

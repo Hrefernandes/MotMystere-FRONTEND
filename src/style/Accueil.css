@@ -131,3 +131,34 @@
   flex-wrap: wrap;
   gap: 10px;
 }
+
+.jour {
+  position: relative;
+  width: fit-content;
+}
+
+.badge-termine {
+  position: absolute;
+  top: -10px;
+  right: -12px;
+  padding: 4px 10px;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--noir);
+  background: var(--vert);
+  border-radius: 6px;
+  box-shadow: 0 0 14px var(--vert);
+  rotate: 8deg;
+  pointer-events: none;
+  animation: badge-flotte 3s ease-in-out infinite;
+}
+
+@keyframes badge-flotte {
+  0%, 100% { translate: 0 0; }
+  50%      { translate: 0 -6px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .badge-termine { animation: none; }
+}

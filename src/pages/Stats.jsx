@@ -18,7 +18,7 @@ function Stats() {
     { valeur: stats.totalPoints, nom: 'Total des points' },
   ]
 
-  const maximum = Math.max(...stats.repartition, 1)
+    const maximum = Math.max(...stats.repartition, 1)
 
   return (
     <main className="stats">
@@ -58,5 +58,7 @@ function Stats() {
     </main>
   )
 }
+
+
 
 export default Stats

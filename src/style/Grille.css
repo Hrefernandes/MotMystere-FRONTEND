@@ -9,7 +9,7 @@
 .grille-ligne {
   width: min(100%, 22rem);
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(var(--word-length), minmax(0, 1fr));
   gap: 0.5rem;
 }
 

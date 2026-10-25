@@ -28,6 +28,7 @@ function FinDePartie() {
     const shareText = createShareText({
       essais,
       evaluations,
+      maxAttempts,
     })
 
     if (!navigator.clipboard) {
@@ -135,7 +136,7 @@ function getShareDate() {
   }).format(new Date())
 }
 
-function createShareText({ essais, evaluations }) {
+function createShareText({ essais, evaluations, maxAttempts }) {
   const rows = evaluations
     .filter(Boolean)
     .map((evaluationRow) => (
@@ -145,7 +146,7 @@ function createShareText({ essais, evaluations }) {
     ))
 
   return [
-    `Le Mot Mystère ${getShareDate()} · ${essais}/6`,
+    `Le Mot Mystère ${getShareDate()} · ${essais}/${maxAttempts}`,
     ...rows,
   ].join('\n')
 }

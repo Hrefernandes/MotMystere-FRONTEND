@@ -1,4 +1,4 @@
-export function secondesAvantMinuit() {
+export function secondAfterMidnight() {
   const p = new Intl.DateTimeFormat('fr-FR', {
     timeZone: 'Europe/Paris',
     hourCycle: 'h23',

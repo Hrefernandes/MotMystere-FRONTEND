@@ -7,7 +7,9 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "vitest run",
+    "generate:words": "node src/data/getWordList.js"
   },
   "dependencies": {
     "gsap": "^3.15.0",

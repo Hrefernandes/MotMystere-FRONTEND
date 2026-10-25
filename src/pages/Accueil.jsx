@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from "react"
 import gsap from 'gsap' // animation GSAP
 import { Draggable } from 'gsap/Draggable' // Drag un pièce
 import { InertiaPlugin } from 'gsap/InertiaPlugin' // Effet d'inertie d'une pièce
+import { isDailyDone } from '../utils/dailyStatus'
 
 import { useNavigate } from "react-router-dom"
 import '../style/Accueil.css'
@@ -13,15 +14,14 @@ function Accueil() {
 
   const [pseudo, setPseudo] = useState(localStorage.getItem('pseudo') || '') // recup son pseudo si il en a un
   const [erreurs, setErreurs] = useState('')
+  const [dailyDone] = useState(isDailyDone)
 
   const tuilesRef = useRef(null) // composant gardera la valeur et si elle change elle ne recharge pas le composant
   const navigate = useNavigate()
 
   
 
-  function startFreeGame(event) {
-    event.preventDefault()
-
+  function startFreeGame(wordLength) {
     if (pseudo.trim().length < 3) {
       setErreurs('Le pseudo doit contenir au moins 3 caractères')
       return
@@ -29,7 +29,9 @@ function Accueil() {
 
     setErreurs('')
     localStorage.setItem('pseudo', pseudo.trim())
-    navigate('/partie?mode=free')
+    localStorage.setItem('mot-mystere-word-length', String(wordLength))
+
+    navigate(`/partie?mode=free&length=${wordLength}`)
   }
 
   function startDailyGame() {
@@ -41,6 +43,19 @@ function Accueil() {
     setErreurs('')
     localStorage.setItem('pseudo', pseudo.trim())
     navigate('/partie?mode=daily')
+  }
+
+  function startHardGame() {
+    if (pseudo.trim().length < 3) {
+      setErreurs('Le pseudo doit contenir au moins 3 caractères')
+      return
+    }
+
+    setErreurs('')
+    localStorage.setItem('pseudo', pseudo.trim())
+    localStorage.setItem('mot-mystere-word-length', '5')
+
+    navigate('/partie?mode=free&length=5&difficulty=hard')
   }
 
   useEffect(() => {
@@ -71,7 +86,13 @@ function Accueil() {
 
       <p className="phraseAccroche">Trouve le bon mot, 5 lettres 6 essais</p>
 
-      <form className="formulaire" onSubmit={startFreeGame}>
+      <form
+        className="formulaire"
+        onSubmit={(event) => {
+          event.preventDefault()
+          startFreeGame(5)
+        }}
+      >
         <label htmlFor="pseudo">Ton pseudo</label>
         <input
           id="pseudo"
@@ -86,12 +107,44 @@ function Accueil() {
         </button>
       </form>
 
+      <div className="jour">
+
+        <button
+          className="bouton"
+          type="button"
+          onClick={startDailyGame}>
+          Mot du jour
+        </button>
+        {dailyDone && <span className="badge-termine">✓ Terminé</span>}
+
+      </div>
+
+
       <button
         className="bouton"
         type="button"
-        onClick={startDailyGame}>
-        Mot du jour
+        onClick={startHardGame}>
+        Partie difficile
       </button>
+
+      <div className="choix-longueur">
+        <button
+          className="bouton"
+          type="button"
+          onClick={() => startFreeGame(6)}
+
+        >
+          Partie libre - 6 lettres
+        </button>
+
+        <button
+          className="bouton"
+          type="button"
+          onClick={() => startFreeGame(7)}
+        >
+          Partie libre - 7 lettres
+        </button>
+      </div>
 
       <div className="liens">
         <button className="bouton secondaire" type="button" onClick={() => navigate('/regles')}>Règles</button>
